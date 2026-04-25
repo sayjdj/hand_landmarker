@@ -1,0 +1,157 @@
+:root {
+    --primary-color: #00ffcc;
+    --secondary-color: #ff007f;
+    --bg-overlay: rgba(0, 0, 0, 0.6);
+    --text-color: #ffffff;
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #111;
+    font-family: var(--font-family);
+    color: var(--text-color);
+}
+
+/* Canvas takes full screen */
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    /* Mirror the canvas so interaction feels natural */
+    transform: scaleX(-1);
+}
+
+/* UI Layer on top of canvas */
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none; /* Let clicks pass through to canvas if needed, though we use buttons */
+}
+
+/* Heads Up Display */
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    pointer-events: none;
+}
+
+#score-display {
+    color: var(--primary-color);
+    text-shadow: 0 0 10px var(--primary-color);
+}
+
+#lives-display {
+    color: var(--secondary-color);
+    text-shadow: 0 0 10px var(--secondary-color);
+}
+
+/* Screens (Start / Game Over) */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-overlay);
+    backdrop-filter: blur(5px);
+    transition: opacity 0.5s ease;
+    pointer-events: auto; /* Allow interacting with buttons */
+}
+
+.screen h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--primary-color);
+    text-shadow: 0 0 20px var(--primary-color);
+}
+
+.screen p {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    max-width: 600px;
+    text-align: center;
+}
+
+.status-message {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #ffaa00;
+}
+
+/* Buttons */
+.btn {
+    margin-top: 30px;
+    padding: 15px 40px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #111;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 0 20px var(--primary-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px var(--primary-color);
+}
+
+.btn:disabled {
+    background-color: #555;
+    color: #888;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Utility to hide elements */
+.hidden {
+    opacity: 0;
+    pointer-events: none !important;
+}
+
+/* Ensures layout works nicely on mobile too */
+@media (max-width: 768px) {
+    .screen h1 {
+        font-size: 2.5rem;
+    }
+    .btn {
+        padding: 10px 30px;
+        font-size: 1.2rem;
+    }
+    #hud {
+        font-size: 1.2rem;
+    }
+}

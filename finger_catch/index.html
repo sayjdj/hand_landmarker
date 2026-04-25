@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finger Catch</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Hidden video element for webcam -->
+    <video id="webcam" autoplay playsinline style="display: none;"></video>
+
+    <!-- Game Canvas -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- UI Overlay container -->
+    <div id="ui-layer">
+        <!-- HUD: Score and Lives (Initially hidden) -->
+        <div id="hud" class="hidden">
+            <div id="score-display">Score: <span id="score">0</span></div>
+            <div id="lives-display">Lives: <span id="lives">3</span>❤️</div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen">
+            <h1>Finger Catch 🖐️</h1>
+            <p>Use your index finger to control the paddle.</p>
+            <p>Catch ⭐ to score points.</p>
+            <p>Avoid 💣 or you'll lose lives!</p>
+            <p id="loading-status" class="status-message">Loading AI Model...</p>
+            <button id="start-btn" class="btn" disabled>Start Game</button>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over-screen" class="screen hidden">
+            <h1>Game Over</h1>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <button id="restart-btn" class="btn">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Main Game Script -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
