@@ -1,0 +1,9 @@
+ INFO  Accepting connections at http://localhost:45241
+ HTTP  4/27/2026 3:26:04 AM ::1 GET /
+ HTTP  4/27/2026 3:26:04 AM ::1 Returned 200 in 37 ms
+ HTTP  4/27/2026 3:26:04 AM ::1 GET /style.css
+ HTTP  4/27/2026 3:26:04 AM ::1 GET /script.js
+ HTTP  4/27/2026 3:26:04 AM ::1 Returned 200 in 4 ms
+ HTTP  4/27/2026 3:26:04 AM ::1 Returned 200 in 3 ms
+
+ INFO  Gracefully shutting down. Please wait...

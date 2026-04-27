@@ -1,7 +1,7 @@
 import {
     HandLandmarker,
     FilesetResolver
-} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.js";
+} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.js";
 
 // --- Game State & DOM Elements ---
 const video = document.getElementById("webcam");
@@ -67,7 +67,7 @@ resizeCanvas();
 async function initializeMediaPipe() {
     try {
         const vision = await FilesetResolver.forVisionTasks(
-            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
+            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
         );
         handLandmarker = await HandLandmarker.createFromOptions(vision, {
             baseOptions: {
