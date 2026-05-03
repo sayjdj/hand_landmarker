@@ -18,6 +18,13 @@ const scoreEl = document.getElementById("score");
 const livesEl = document.getElementById("lives");
 const finalScoreEl = document.getElementById("final-score");
 
+const delegateModeEl = document.getElementById("delegate-mode");
+const fingerStatusEl = document.getElementById("finger-status");
+const toggleDelegateBtn = document.getElementById("toggle-delegate-btn");
+
+let currentDelegate = "CPU"; // Default to CPU for better mobile compatibility
+
+
 // Game configuration
 const GAME_CONFIG = {
     initialLives: 3,
@@ -66,23 +73,41 @@ resizeCanvas();
 // Initialize MediaPipe Hand Landmarker
 async function initializeMediaPipe() {
     try {
+        loadingStatus.innerText = "Loading AI Model (" + currentDelegate + ")...";
+        loadingStatus.style.color = "#ffaa00";
+        startBtn.disabled = true;
+
         const vision = await FilesetResolver.forVisionTasks(
             "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
         );
+
+        if (handLandmarker) {
+            // Close existing to avoid memory leaks if toggling
+            // (Note: mediapipe tasks usually don't have an explicit close in JS API, but we just reassign)
+        }
+
         handLandmarker = await HandLandmarker.createFromOptions(vision, {
             baseOptions: {
                 modelAssetPath: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`,
-                delegate: "GPU"
+                delegate: currentDelegate
             },
             runningMode: "VIDEO",
             numHands: 1
         });
 
-        loadingStatus.innerText = "Camera access required...";
-        setupWebcam();
+        delegateModeEl.innerText = currentDelegate;
+
+        if (!webcamRunning) {
+            loadingStatus.innerText = "Camera access required...";
+            setupWebcam();
+        } else {
+            loadingStatus.innerText = "Ready! (" + currentDelegate + ")";
+            loadingStatus.style.color = "#00ffcc";
+            startBtn.disabled = false;
+        }
     } catch (error) {
         console.error("Error initializing MediaPipe:", error);
-        loadingStatus.innerText = "Error loading AI Model. Please refresh.";
+        loadingStatus.innerText = "Error loading AI Model (" + currentDelegate + "). Please try toggling CPU/GPU.";
         loadingStatus.style.color = "red";
     }
 }
@@ -354,18 +379,16 @@ async function gameLoop() {
             const results = handLandmarker.detectForVideo(video, startTimeMs);
 
             if (results.landmarks && results.landmarks.length > 0) {
-                // Get Index Finger Tip (landmark 8)
                 const indexFinger = results.landmarks[0][8];
-
-                // Map normalized coordinates (0-1) to canvas size
-                // Note: since canvas is mirrored via CSS scaleX(-1),
-                // the raw X coordinate from mediapipe (which is not mirrored)
-                // actually matches perfectly when drawn directly onto the mirrored canvas.
                 state.fingerX = indexFinger.x * canvas.width;
                 state.fingerY = indexFinger.y * canvas.height;
+                fingerStatusEl.innerText = "Detected";
+                fingerStatusEl.style.color = "#00ffcc";
             } else {
                 state.fingerX = null;
                 state.fingerY = null;
+                fingerStatusEl.innerText = "Not Detected";
+                fingerStatusEl.style.color = "#ff007f";
             }
         }
     }
@@ -413,7 +436,13 @@ function gameOver() {
     gameOverScreen.classList.remove("hidden");
 }
 
+
 // --- Event Listeners ---
+toggleDelegateBtn.addEventListener("click", () => {
+    currentDelegate = currentDelegate === "CPU" ? "GPU" : "CPU";
+    initializeMediaPipe();
+});
+
 startBtn.addEventListener("click", startGame);
 restartBtn.addEventListener("click", startGame);
 
